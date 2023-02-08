@@ -6,9 +6,8 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   return data;
 }); 
 
-
 const initialState = {
-  post: {
+  posts: {
     items: [],
     status: 'loading' ,
   },
@@ -22,6 +21,20 @@ const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducer: {}, 
+  extraReducers: {
+   [fetchPosts.pending]: (state) => {
+    state.posts.status = 'loading';
+   },
+   [fetchPosts.fulfilled]: (state, action) => {
+    state.posts.items = action.payload;
+    state.posts.status = 'loaded';
+   },
+   [fetchPosts.rejected]: (state) => {
+    console.log(state.posts)
+    state.posts.items = []; 
+    state.posts.status = 'error';
+   }
+  }
 })
 
 export const postsReducer = postsSlice.reducer;
